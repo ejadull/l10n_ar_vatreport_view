@@ -25,7 +25,7 @@
     'category': 'Accounting',
     'description': "",
     'author': 'Moldeo Interactive',
-    'website': 'http://business.moldeo.coop http://grupoadhoc.com.ar/',
+    'website': 'http://business.moldeo.coop/',
     'images': [],
     'depends': ['account'],
     'demo': [],

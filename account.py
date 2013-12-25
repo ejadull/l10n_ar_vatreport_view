@@ -6,25 +6,39 @@ class account_invoice(osv.osv):
     _description = "VAT Report"
     _auto = False
     _columns = {
-	'journal_name': fields.char('Journal Name',size=128,readonly=True),
+	'journal_id': fields.many2one('account.journal','Journal Name'),
 	'invoice_number': fields.char('Invoice Number',size=32,readonly=True),
-	'account_name': fields.char('Account Name',size=128,readonly=True),
-	'tax_name': fields.char('Tax Name',size=128,readonly=True),
-	'partner_name': fields.char('Partner Name',size=128,readonly=True),
-	'document_type_name': fields.char('Doc Type',size=64,readonly=True),
+	'account_id': fields.many2one('account.account','Account Name'),
+	'date_invoice': fields.date('Date',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), \
+                                  ('03', 'March'), ('04', 'April'),\
+                                  ('05', 'May'), ('06', 'June'), \
+                                  ('07', 'July'), ('08', 'August'),\
+                                  ('09', 'September'), ('10', 'October'),\
+                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
+        'year': fields.char('Year', size=4, readonly=True),
+	'partner_id': fields.many2one('res.partner','Partner Name'),
+	'document_type_name': fields.char('Doc Type',size=32,readonly=True),
+	#'document_type_id': fields.many2one('afip.document.type','Doc Type'),
 	'document_number': fields.char('Doc Number',size=32,readonly=True),
 	'responsability_name': fields.char('Resp Name',size=32,readonly=True),
-	'base_amount': fields.float('Base Amount',readonly=True),
-	'tax_amount': fields.float('Tax Amount',readonly=True),
-	'amount': fields.float('Amount',readonly=True),
+	# 'responsability_id': fields.many2one('afip.responsability','Resp Name'),
+	'base_amount': fields.float('Base Amount',readonly=True,group_operator="sum",digits=(16,2)),
+	'tax_amount': fields.float('Tax Amount',readonly=True,group_operator="sum",digits=(16,2)),
+	'amount': fields.float('Amount',readonly=True,group_operator="sum",digits=(16,2)), 
 	}
  
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, 'account_tax_vat_report')
 	cr.execute("""
 		create or replace view account_tax_vat_report as (
-		select a.id as id,d.name as journal_name,c.number as invoice_number,b.name as account_name,h.description as tax_name,
-			e.name as partner_name,f.name as document_type_name,e.document_number as document_number,
+		select a.id as id,d.id as journal_id,c.number as invoice_number,b.id as account_id,
+			c.date_invoice as date_invoice,
+                        to_char(c.date_invoice, 'YYYY') as year,
+                        to_char(c.date_invoice, 'MM') as month,
+                        to_char(c.date_invoice, 'YYYY-MM-DD') as day,
+			e.id as partner_id,f.name as document_type_name,e.document_number as document_number,
 			g.name as responsability_name,
 			a.base_amount as base_amount, a.tax_amount as tax_amount, a.amount as amount
 			from account_invoice_tax a
@@ -34,21 +48,7 @@ class account_invoice(osv.osv):
 				inner join res_partner e on c.partner_id = e.id
 				inner join afip_document_type f on e.document_type_id = f.id
 				inner join afip_responsability g on e.responsability_id = g.id
-				inner join account_tax h on a.tax_code_id = h.tax_code_id
 				)
 	""")	
-        #cr.execute("""
-        #    CREATE OR REPLACE VIEW my_report_model AS (
-        #        SELECT cbl.analytic_account_id AS id,
-        #            aaap.name AS parent_name,
-        #            aaa.name AS child_name,
-        #            cbl.date_from,
-        #            cbl.date_to,
-        #            cbl.planned_amount
-        #        FROM crossovered_budget_lines cbl
-        #        INNER JOIN account_analytic_account aaa ON cbl.analytic_account_id = aaa.id
-        #        LEFT OUTER JOIN account_analytic_account aaap ON aaa.parent_id = aaap.id
-        #    )
-        #""")
  
 account_invoice()
