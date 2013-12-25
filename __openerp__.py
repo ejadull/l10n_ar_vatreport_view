@@ -27,7 +27,7 @@
     'author': 'Moldeo Interactive',
     'website': 'http://business.moldeo.coop/',
     'images': [],
-    'depends': ['account'],
+    'depends': ['account','l10n_ar_invoice'],
     'demo': [],
     'data': ['account_view.xml'],
     'test': [],

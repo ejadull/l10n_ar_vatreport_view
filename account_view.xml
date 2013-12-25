@@ -14,6 +14,7 @@
 		      <field name="year" invisible="1" />
 		      <field name="month" invisible="1" />
 		      <field name="day" invisible="1" />
+	              <field name="invoice_type" />
 	              <field name="partner_id" />
 	              <field name="document_type_name" />
 	              <field name="document_number" />
@@ -36,6 +37,8 @@
         	           <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" help="Start Date"/>
                 	   <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'year'}" help="Start Date"/>
                     </group>
+                    <filter string="Sales" domain="[('invoice_type','=','out_invoice')]" help="Sale invoices"/>
+                    <filter string="Purchases" domain="[('invoice_type','=','in_invoice')]" help="Purchase invoices"/>
                </search>
             </field>
     </record>

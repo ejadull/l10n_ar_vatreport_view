@@ -18,9 +18,10 @@ class account_invoice(osv.osv):
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
+	'invoice_type': fields.char('Invoice Type',size=32,readonly=True),
 	'partner_id': fields.many2one('res.partner','Partner Name'),
 	'document_type_name': fields.char('Doc Type',size=32,readonly=True),
-	#'document_type_id': fields.many2one('afip.document.type','Doc Type'),
+	# 'document_type_id': fields.many2one('afip.document.type','Doc Type'),
 	'document_number': fields.char('Doc Number',size=32,readonly=True),
 	'responsability_name': fields.char('Resp Name',size=32,readonly=True),
 	# 'responsability_id': fields.many2one('afip.responsability','Resp Name'),
@@ -38,6 +39,7 @@ class account_invoice(osv.osv):
                         to_char(c.date_invoice, 'YYYY') as year,
                         to_char(c.date_invoice, 'MM') as month,
                         to_char(c.date_invoice, 'YYYY-MM-DD') as day,
+			c.type as invoice_type,
 			e.id as partner_id,f.name as document_type_name,e.document_number as document_number,
 			g.name as responsability_name,
 			a.base_amount as base_amount, a.tax_amount as tax_amount, a.amount as amount
@@ -52,3 +54,23 @@ class account_invoice(osv.osv):
 	""")	
  
 account_invoice()
+
+"""
+class afip_document_type(osv.osv):
+    _name = "afip.document.type"
+    _inherit = "afip.document.type"
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        if isinstance(ids, (int, long)):
+                    ids = [ids]
+        reads = self.read(cr, uid, ids, ['name'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            res.append((record['id'], name))
+        return res
+
+afip_document_type()
+"""
