@@ -1,5 +1,6 @@
 from openerp.osv import fields,osv
 from openerp import tools
+
  
 class account_invoice(osv.osv):
     _name = "account.tax.vat_report"
