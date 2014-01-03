@@ -45,7 +45,7 @@ class account_invoice(osv.osv):
 			c.type as invoice_type,
 			e.id as partner_id,f.name as document_type_name,e.document_number as document_number,
 			g.name as responsability_name,
-			a.base_amount as base_amount, a.tax_amount as tax_amount, a.amount as amount
+			a.base_amount as base_amount, a.tax_amount as tax_amount, c.amount_total as amount
 			from account_invoice_tax a
 				inner join account_account b on a.account_id = b.id
 				inner join account_invoice c on a.invoice_id = c.id
