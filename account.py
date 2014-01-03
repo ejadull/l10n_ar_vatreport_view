@@ -11,6 +11,7 @@ class account_invoice(osv.osv):
 	'invoice_number': fields.char('Supplier Invoice Number',size=32,readonly=True),
 	'supplier_invoice_number': fields.char('Invoice Number',size=32,readonly=True),
 	'account_id': fields.many2one('account.account','Account Name'),
+	'tax_name': fields.char('Tax Name',size=32,readonly=True),
 	'date_invoice': fields.date('Date',readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
@@ -38,6 +39,7 @@ class account_invoice(osv.osv):
 		create or replace view account_tax_vat_report as (
 		select a.id as id,d.id as journal_id,c.number as invoice_number,c.supplier_invoice_number as supplier_invoice_number,
 			b.id as account_id,
+			h.description as tax_name,
 			c.date_invoice as date_invoice,
                         to_char(c.date_invoice, 'YYYY') as year,
                         to_char(c.date_invoice, 'MM') as month,
@@ -53,6 +55,7 @@ class account_invoice(osv.osv):
 				inner join res_partner e on c.partner_id = e.id
 				inner join afip_document_type f on e.document_type_id = f.id
 				inner join afip_responsability g on e.responsability_id = g.id
+				inner join account_tax h on a.tax_code_id = h.tax_code_id
 				)
 	""")	
  
