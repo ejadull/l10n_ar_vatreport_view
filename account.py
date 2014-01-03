@@ -7,7 +7,8 @@ class account_invoice(osv.osv):
     _auto = False
     _columns = {
 	'journal_id': fields.many2one('account.journal','Journal Name'),
-	'invoice_number': fields.char('Invoice Number',size=32,readonly=True),
+	'invoice_number': fields.char('Supplier Invoice Number',size=32,readonly=True),
+	'supplier_invoice_number': fields.char('Invoice Number',size=32,readonly=True),
 	'account_id': fields.many2one('account.account','Account Name'),
 	'date_invoice': fields.date('Date',readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
@@ -34,7 +35,8 @@ class account_invoice(osv.osv):
         tools.sql.drop_view_if_exists(cr, 'account_tax_vat_report')
 	cr.execute("""
 		create or replace view account_tax_vat_report as (
-		select a.id as id,d.id as journal_id,c.number as invoice_number,b.id as account_id,
+		select a.id as id,d.id as journal_id,c.number as invoice_number,c.supplier_invoice_number as supplier_invoice_number,
+			b.id as account_id,
 			c.date_invoice as date_invoice,
                         to_char(c.date_invoice, 'YYYY') as year,
                         to_char(c.date_invoice, 'MM') as month,
@@ -55,22 +57,3 @@ class account_invoice(osv.osv):
  
 account_invoice()
 
-"""
-class afip_document_type(osv.osv):
-    _name = "afip.document.type"
-    _inherit = "afip.document.type"
-
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
-        if isinstance(ids, (int, long)):
-                    ids = [ids]
-        reads = self.read(cr, uid, ids, ['name'], context=context)
-        res = []
-        for record in reads:
-            name = record['name']
-            res.append((record['id'], name))
-        return res
-
-afip_document_type()
-"""

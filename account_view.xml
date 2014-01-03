@@ -9,6 +9,7 @@
 		<tree string="VAT Report" version="7.0">
 	              <field name="journal_id" />
 	              <field name="invoice_number" />
+	              <field name="supplier_invoice_number" />
 	              <field name="account_id" />
 		      <field name="date_invoice" />
 		      <field name="year" invisible="1" />
