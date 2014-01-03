@@ -2,6 +2,7 @@
 <openerp>
     <data>
 
+
     <record model ="ir.ui.view" id="view_vat_report_tree">
         <field name="name">vat.report.tree</field>
         <field name="model">account.tax.vat_report</field>
