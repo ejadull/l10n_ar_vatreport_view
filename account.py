@@ -37,7 +37,10 @@ class account_invoice(osv.osv):
         tools.sql.drop_view_if_exists(cr, 'account_tax_vat_report')
 	cr.execute("""
 		create or replace view account_tax_vat_report as (
-		select a.id as id,d.id as journal_id,c.number as invoice_number,c.supplier_invoice_number as supplier_invoice_number,
+		select  a.id as id,
+                        d.id as journal_id,
+                        c.number as invoice_number,
+                        c.supplier_invoice_number as supplier_invoice_number,
 			b.id as account_id,
 			h.description as tax_name,
 			c.date_invoice as date_invoice,
@@ -47,7 +50,9 @@ class account_invoice(osv.osv):
 			c.type as invoice_type,
 			e.id as partner_id,f.name as document_type_name,e.document_number as document_number,
 			g.name as responsability_name,
-			a.base_amount as base_amount, a.tax_amount as tax_amount, c.amount_total as amount
+			CASE WHEN c.type IN ('out_invoice', 'in_refund') THEN a.base_amount  ELSE -a.base_amount  END as base_amount,
+                        CASE WHEN c.type IN ('out_invoice', 'in_refund') THEN a.tax_amount   ELSE -a.tax_amount   END as tax_amount,
+                        CASE WHEN c.type IN ('out_invoice', 'in_refund') THEN c.amount_total ELSE -c.amount_total END as amount
 			from account_invoice_tax a
 				inner join account_account b on a.account_id = b.id
 				inner join account_invoice c on a.invoice_id = c.id
