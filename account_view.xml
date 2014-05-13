@@ -36,6 +36,7 @@
                 <search string="Search VAT Report">
                     <field name="partner_id" string="Partner" />
 	            <group expand="1" string="Group By ...">
+	                   <filter string="Journal" icon="terp-stage" domain="[]" context="{'group_by':'journal_id'}" />
 	                   <filter string="Tax" icon="terp-stage" domain="[]" context="{'group_by':'tax_name'}" />
         	           <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" help="Start Date"/>
                 	   <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'year'}" help="Start Date"/>
