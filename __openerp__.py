@@ -21,7 +21,7 @@
 
 {
     'name': 'VAT Report information',
-    'version': '0.1',
+    'version': '8.0.0.1',
     'category': 'Accounting',
     'description': "",
     'author': 'Moldeo Interactive',
